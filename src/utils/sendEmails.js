@@ -21,3 +21,6 @@ export const sendEmail = async({ to, subject, html })=>{
   if(info.rejected.length > 0 ) return false;
   return true
 }
+
+
+
