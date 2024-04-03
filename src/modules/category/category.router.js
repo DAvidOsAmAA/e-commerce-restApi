@@ -4,11 +4,11 @@ import { isAuthorized } from '../../midleware/authrization.midleware.js';
 import { fileUpload } from '../../utils/fileUpload.js';
 import { validation } from '../../midleware/validation.midleware.js';
 import * as categorySchema from "./category.schema.js";
-import * as categoryController from './category.controller.js'
-
-
+import * as categoryController from './category.controller.js';
+import subCategoryRouter from '../subcategory/subcategory.router.js'
 
 const router = Router();
+router.use("/:category/subcategory",subCategoryRouter)
 
 
 router.post("/",
