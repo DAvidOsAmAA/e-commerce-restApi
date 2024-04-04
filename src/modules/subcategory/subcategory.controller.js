@@ -77,6 +77,6 @@ export const getAllSubCategory = asyncHandler(async (req, res, next) => {
     if (req.params.category) {
         const result = await Subcategory.find({ category: req.params.category })
     }
-    const result = await Subcategory.find();
+    const result = await Subcategory.find().populate([{ path: "category",populate:"createdBy" }]);
     return res.json({ success: true, result })
 })

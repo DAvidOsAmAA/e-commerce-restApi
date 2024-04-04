@@ -56,6 +56,6 @@ export const deleteCategory = asyncHandler(async (req, res, next) => {
 
 
 export const allCategories = asyncHandler(async (req, res, next) => {
-    const results = await Category.find();
+    const results = await Category.find().populate("subcategory");
     res.json({success:true,results})
 })

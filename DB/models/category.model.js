@@ -5,7 +5,13 @@ const categorySchema = new Schema({
     slug: { type: String, required: true, unique: true },
     createdBy: { type: Types.ObjectId, ref: "User", required: true },
     image: { id: { type: String }, url: { type: String } }
-}, { timestamps: true })
+}, { timestamps: true, toJSON: { virtuals: true }, toObject: { virtuals: true } })
+
+categorySchema.virtual("subcategory", {
+    ref: "SubCategory",
+    localField: "_id",
+    foreignField: "category"
+})
 
 
 export const Category = model("Category", categorySchema)
