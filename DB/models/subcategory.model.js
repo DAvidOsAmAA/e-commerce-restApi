@@ -5,7 +5,8 @@ const subCategorySchema = new Schema({
     slug: { type: String, required: true, unique: true },
     createdBy: { type: Types.ObjectId, ref: "User", required: true },
     image: { id: { type: String }, url: { type: String } },
-    category: { type: Types.ObjectId, ref: "Category", required:true }
+    category: { type: Types.ObjectId, ref: "Category", required:true },
+    brands:[{type: Types.ObjectId, ref: "Brand", required: true}],
 }, { timestamps: true })
 
 
