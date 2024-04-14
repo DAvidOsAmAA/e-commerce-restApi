@@ -101,20 +101,33 @@ export const forgetCode = async (req, res, next) => {
 };
 
 export const resetPassword = async (req, res, next) => {
+
+
   const { email, password, forgetCode } = req.body;
   const user = await User.findOne({ email });
+
+
   if (!user) return next(new Error("invalid email !!", { cause: 404 }));
+
+
   if (forgetCode !== user.forgetCode) return next(new Error("Code invalid"));
+
+
   const hashPassword = bcryptjs.hashSync(
     password,
     parseInt(process.env.SALT_ROUND)
   );
+
+
+
   await user.save();
   const tokens = await Token.find({ user: user._id });
   tokens.forEach(async (token) => {
     token.isValid = false;
     await token.save();
   });
+
+  
   return res.json({
     success: true,
     message: "try to login again with the new password",
