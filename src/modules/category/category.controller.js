@@ -46,10 +46,20 @@ export const updateCategory = asyncHandler(async (req, res, next) => {
 
 export const deleteCategory = asyncHandler(async (req, res, next) => {
   const category = await Category.findByIdAndDelete(req.params.id);
+
+  const subcategories = await Category.deleteMany({ category: category._id })
+
   if (!category) return next(new Error("category not found", { cause: 404 }));
+
+
+
   if (category.createdBy.toString() !== req.user._id.toString()) {
     next(new Error("Not allowed to delete"))
   }
+
+  await category.deleteOne();
+
+  
   await cloudinary.uploader.destroy(category.image.id)
   return res.json({ success: true, message: "category deleted successfully" })
 });

@@ -17,7 +17,9 @@ router.post("/", isAuthenticated, isAuthorized('seller'), fileUpload().fields([
 )
 
 
+router.delete("/:id", isAuthenticated, isAuthorized("seller"), validation(productSchema.deleteProduct), productController.deleteProduct)
 
+router.get("/",productController.getProduct)
 
 
 export default router;

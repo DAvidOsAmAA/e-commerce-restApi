@@ -1,5 +1,6 @@
 import { Schema, model } from "mongoose";
 
+import bcryptjs from 'bcryptjs';
 
 const userSchema = new Schema({
   userName: {
@@ -31,7 +32,7 @@ const userSchema = new Schema({
   },
   role: {
     type: String,
-    enum: ["user", "seller","admin"],
+    enum: ["user", "seller", "admin"],
     default: "user"
   },
   forgetCode: {
@@ -45,4 +46,13 @@ const userSchema = new Schema({
 
 }, { timestamps: true })
 
-export const User = model("User",userSchema)
+
+userSchema.pre("save", function () {
+
+  if(this.isModified("password")){
+    this.password = bcryptjs.hashSync(this.password, parseInt(process.env.SALT_ROUND));
+  }
+
+})
+
+export const User = model("User", userSchema)
