@@ -1,4 +1,5 @@
 import { Cart } from "../../../DB/models/cart.model.js";
+import { Product } from "../../../DB/models/product.model.js";
 import { asyncHandler } from "../../utils/asyncHandler.js";
 
 
@@ -7,6 +8,23 @@ import { asyncHandler } from "../../utils/asyncHandler.js";
 export const addToCart = asyncHandler(async (req, res, next) => {
 
   const { productId, quantity } = req.body;
+
+  const product = await Product.findById(productId);
+  if (!product) return next(new Error("Product not found"))
+
+
+  if (quantity > product.availableItems) {
+
+
+    return next(new Error(`sorry, only ${product.availableItems} items is availabe `))
+
+  }
+
+
+
+
+
+
   const cart = await Cart.findOneAndUpdate(
 
     {
@@ -70,21 +88,57 @@ export const userCart = asyncHandler(async (req, res, next) => {
 export const updateCart = asyncHandler(async (req, res, next) => {
   const { productId, quantity } = req.body;
 
+  const product = await Product.findById(productId);
+  if (!product) return next(new Error("Product not found"))
+
+  if (quantity > product.availableItems) {
+
+
+    return next(new Error(`sorry, only ${product.availableItems} items is availabe `))
+
+  }
+
   if (!productId || !quantity) {
     return res.status(400).json({ success: false, message: "productId and quantity are required" });
   }
 
 
-    const cart = await Cart.findOneAndUpdate(
-      { user: req.user._id, "products.productId": productId },
-      { $set: { "products.$.quantity": quantity } },
-      { new: true }
-    );
+  const cart = await Cart.findOneAndUpdate(
+    { user: req.user._id, "products.productId": productId },
+    { $set: { "products.$.quantity": quantity } },
+    { new: true }
+  );
 
-    if (!cart) {
-      return res.status(404).json({ success: false, message: "Product not found in cart" });
-    }
+  if (!cart) {
+    return res.status(404).json({ success: false, message: "Product not found in cart" });
+  }
 
-  
-    return res.json({ success: true, result: { cart } });
+
+  return res.json({ success: true, result: { cart } });
 });
+
+
+
+
+
+
+
+export const removeFromCart = asyncHandler(async (req, res, next) => {
+
+
+  const { productId } = req.params;
+
+  const product = await Product.findById(productId);
+  if (!product) return next(new Error("Product not found"))
+
+
+  const cart = await Cart.findOneAndUpdate(
+    { user: req.user._id },
+    { $pull: { products: { productId } } },
+    { new: true }
+
+  )
+
+  res.json({ success: true, results: { cart } })
+
+})

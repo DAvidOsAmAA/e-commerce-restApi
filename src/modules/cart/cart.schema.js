@@ -34,3 +34,15 @@ export const updateCart = joi.object({
 
 
 }).required()
+
+
+
+
+
+
+export const removeFromCart = joi.object({
+
+  productId: joi.string().custom(isValidObjectId).required(),
+
+
+}).required()

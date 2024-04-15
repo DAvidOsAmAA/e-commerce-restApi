@@ -22,4 +22,8 @@ router.get("/",isAuthenticated,isAuthorized("user","admin"),validation(cartSchem
 router.patch("/",isAuthenticated,isAuthorized("user"),validation(cartSchema.updateCart),cartController.updateCart)
 
 
+
+router.patch("/:productId",isAuthenticated,isAuthorized("user"),validation(cartSchema.removeFromCart),cartController.removeFromCart)
+
+
 export default router;
