@@ -4,9 +4,10 @@ import { isAuthorized } from "../../midleware/authrization.midleware.js";
 import { fileUpload } from "../../utils/fileUpload.js";
 import { validation } from "../../midleware/validation.midleware.js";
 import * as productSchema from "./product.schema.js";
-import * as productController from "./product.controller.js"
+import * as productController from "./product.controller.js";
+import * as reviewRouter from "../reviews/review.router.js"
 const router = Router();
-
+router.use("/:productId/review", reviewRouter);
 
 
 

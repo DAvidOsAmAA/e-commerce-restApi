@@ -29,7 +29,22 @@ const productSchema = new Schema({
 
   cloudFolder: { type: String, required: true, unique: true },
 
+  averageRate: { type: Number, min: 1, max: 5 }
+
 }, { timestamps: true, strictQuery: true, toJSON: { virtuals: true }, toObject: { virtuals: true } });
+
+
+
+productSchema.virtual("review", {
+  ref: "Review",
+  localField: "_id",
+  foreignField: "productId"
+})
+
+
+
+
+
 
 productSchema.virtual("finalPrice").get(function () {
 
@@ -51,6 +66,11 @@ productSchema.query.paginate = function (page) {
 
   return this.skip(skip).limit(limit).paginate(page);
 
+}
+
+
+productSchema.methods.inStock = function (requiredQuantity) {
+  return this.availableItems >= requiredQuantity ? true : false;
 }
 
 
